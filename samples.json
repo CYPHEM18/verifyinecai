@@ -1,0 +1,12 @@
+[
+  {"flag": true,  "text": "URGENT: INEC is giving free N50,000 to all registered voters. Click http://inec-payout.com/claim now or lose it today!"},
+  {"flag": true,  "text": "Collect your PVC online now, register your details at http://1nec-portal.net to avoid disqualification"},
+  {"flag": true,  "text": "Dear voter, the INEC chairman has directed that all voters send their BVN and phone PIN to verify eligibility. Reply now."},
+  {"flag": true,  "text": "Breaking: election has been cancelled in all states, share before they delete this!"},
+  {"flag": true,  "text": "Your voter account is suspended. Verify at http://xn--inecnigria-x7a.org to continue"},
+  {"flag": false, "text": "Check your voter registration status on https://inecnigeria.org"},
+  {"flag": false, "text": "Reminder: remember to bring your PVC to your polling unit on election day."},
+  {"flag": false, "text": "Join our community meeting this Saturday to discuss how to volunteer as a polling agent."},
+  {"flag": false, "text": "INEC officials will never ask for your bank details. Beware of fake links."},
+  {"flag": false, "text": "Hello, are we still meeting for lunch tomorrow?"}
+]
