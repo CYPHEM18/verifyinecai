@@ -3,6 +3,7 @@ const { search } = require('../lib/retrieval');
 const { searchWeb } = require('../lib/websearch');
 const { callLLM } = require('../lib/llm');
 const { promptA, promptB } = require('../lib/prompts');
+const { searchOnly } = require('../lib/rules');
 
 const VERDICTS = ['safe', 'suspicious', 'dangerous', 'unverified'];
 const norm = (s) => String(s).toLowerCase().replace(/\s+/g, ' ').trim();
@@ -15,6 +16,11 @@ module.exports = async (req, res) => {
   // Stages 0-1: hard evidence (code)
   const evidence = extractUrls(text).slice(0, 5).map(checkUrl);
   const hardDanger = evidence.some((e) => e.lookalike_of || e.punycode);
+
+  // No model configured: run search-only mode (link checks + keyword rules + live search)
+  if (!process.env.LLM_BASE_URL || !process.env.LLM_MODEL) {
+    return res.status(200).json(await searchOnly(text, evidence, hardDanger));
+  }
 
   let analysis = {};
   let verification = null;
