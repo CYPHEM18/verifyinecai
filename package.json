@@ -1,0 +1,11 @@
+{
+  "name": "verifyinec",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI-powered verification of election messages, fake INEC portals and impersonation",
+  "scripts": {
+    "dev": "vercel dev",
+    "test": "node scripts/test.js"
+  },
+  "engines": { "node": ">=18" }
+}
