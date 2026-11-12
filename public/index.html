@@ -81,7 +81,7 @@ function render(d,input){
   if(d.evidence&&d.evidence.length){h3(box,'Link checks');d.evidence.forEach(e=>{const f=[e.in_registry?'official INEC domain':'not an official INEC domain'];
     if(e.lookalike_of)f.push('imitates '+e.lookalike_of);if(e.punycode)f.push('disguised characters');if(e.shortener)f.push('shortened link');box.appendChild(el('div','it',e.host+' — '+f.join(', ')))})}
   if(d.mode==='search-only')box.appendChild(el('p','note','Running without an AI model: link checks, keyword rules and live search only.'));
-  else if(d.mode!=='link'&&!d.ai_used)box.appendChild(el('p','note','AI analysis was unavailable, so only technical checks were used.'));
+  else if(d.mode!=='link'&&!d.ai_used)box.appendChild(el('p','note','AI analysis was unavailable'+(d.ai_error?' ('+d.ai_error+')':'')+', so only technical checks were used.'));
   if(d.verdict==='dangerous'||d.verdict==='suspicious'){const b=el('button','sec','Flag on this device');b.onclick=()=>{const a=feed();a.unshift({input:input.slice(0,300),verdict:d.verdict,hosts:(d.evidence||[]).map(e=>e.host),tactics:d.tactics||[],date:new Date().toISOString().slice(0,10)});save(a.slice(0,50));b.disabled=true;b.textContent='Flagged';draw()};box.appendChild(b)}
   $('out').replaceChildren(box);
 }
