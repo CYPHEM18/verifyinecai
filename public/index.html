@@ -83,7 +83,8 @@ function render(d) {
       card.appendChild(el('div', 'item', e.host + ' — ' + flags.join(', ')));
     });
   }
-  if (!d.ai_used) card.appendChild(el('p', 'note', 'AI analysis was unavailable, so only technical checks were used.'));
+  if (d.mode === 'search-only') card.appendChild(el('p', 'note', 'Running without an AI model: link checks, keyword rules and live search only.'));
+  else if (!d.ai_used) card.appendChild(el('p', 'note', 'AI analysis was unavailable, so only technical checks were used.'));
 }
 
 $('go').addEventListener('click', async () => {
