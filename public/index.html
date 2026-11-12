@@ -2,105 +2,121 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>VerifyINEC</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VerifyINEC: check a link or message before you trust it</title>
+<meta name="description" content="Check whether a link or message about voter registration, PVC collection or results looks fake before you click, pay or share.">
 <style>
-  :root { --bg:#f6f7f5; --card:#fff; --text:#16201a; --muted:#5b6b61; --line:#dfe5e0; --green:#0a7a43; --amber:#b86e00; --red:#c0281d; --grey:#5b6b61; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#101512; --card:#18201b; --text:#e8efe9; --muted:#9fb0a5; --line:#2a352d; --green:#3ec47d; --amber:#f0a030; --red:#ff6b5f; --grey:#9fb0a5; } }
-  * { box-sizing:border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif; }
-  main { max-width:680px; margin:0 auto; padding:20px 16px 48px; }
-  h1 { margin:8px 0 4px; font-size:26px; } .sub { color:var(--muted); margin:0 0 18px; }
-  textarea { width:100%; min-height:140px; padding:12px; border:1px solid var(--line); border-radius:10px; background:var(--card); color:var(--text); font:inherit; resize:vertical; }
-  button { margin-top:10px; width:100%; padding:13px; border:0; border-radius:10px; background:var(--green); color:#fff; font:600 16px inherit; cursor:pointer; }
-  button:disabled { opacity:.6; cursor:wait; }
-  .card { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:16px; margin-top:16px; }
-  .badge { display:inline-block; padding:4px 12px; border-radius:99px; color:#fff; font-weight:700; text-transform:uppercase; font-size:13px; }
-  .safe { background:var(--green); } .suspicious { background:var(--amber); } .dangerous { background:var(--red); } .unverified { background:var(--grey); }
-  h2 { font-size:13px; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin:18px 0 6px; }
-  .chip { display:inline-block; margin:0 6px 6px 0; padding:2px 10px; border:1px solid var(--line); border-radius:99px; font-size:13px; }
-  .item { border-top:1px solid var(--line); padding:8px 0; font-size:14px; overflow-wrap:anywhere; }
-  .item:first-of-type { border-top:0; }
-  .quote { color:var(--muted); font-style:italic; }
-  .note { color:var(--muted); font-size:13px; margin-top:14px; }
+:root{--g:#0b6b3a;--gd:#084d2a;--bg:#f4f6f3;--card:#fff;--tx:#14211a;--mu:#5a6b61;--ln:#d9e1db;--am:#b86e00;--rd:#b3261e;--gy:#5a6b61}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{background:var(--g);color:#fff;position:sticky;top:0;z-index:5;padding-top:env(safe-area-inset-top)}
+.bar{max-width:960px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:700 20px Georgia,serif;color:#fff;text-decoration:none}
+nav{display:flex;gap:16px;flex-wrap:wrap;font-size:14px}nav a{color:#d6efe0;text-decoration:none}nav a:hover{color:#fff}
+.hero{background:linear-gradient(var(--gd),var(--g));color:#fff;padding:44px 18px 56px}
+.wrap{max-width:960px;margin:0 auto;padding:0 18px}.hero .wrap{padding:0}
+h1{font:700 clamp(28px,5vw,42px)/1.15 Georgia,serif;margin:0 0 12px}.hero p{max-width:640px;color:#d6efe0;margin:0}
+main{max-width:960px;margin:-32px auto 0;padding:0 18px 56px}
+section{background:var(--card);border:1px solid var(--ln);border-radius:12px;padding:22px;margin-bottom:20px}
+h2{font:700 22px Georgia,serif;margin:0 0 4px}.sub{color:var(--mu);margin:0 0 14px;font-size:15px}
+.tabs{display:flex;gap:8px;margin-bottom:14px}.tab{flex:1;padding:10px;border:1px solid var(--ln);background:#fff;border-radius:8px;font:600 15px inherit;cursor:pointer;color:var(--tx)}
+.tab[aria-selected=true]{background:var(--g);color:#fff;border-color:var(--g)}
+input,textarea,select{width:100%;padding:12px;border:1px solid var(--ln);border-radius:8px;font:inherit;background:#fff;color:var(--tx)}textarea{min-height:130px;resize:vertical}
+button.go,button.sec{margin-top:10px;padding:12px 20px;border-radius:8px;font:600 15px inherit;cursor:pointer;border:1px solid var(--g)}
+button.go{background:var(--g);color:#fff}button.sec{background:#fff;color:var(--g)}button:disabled{opacity:.6;cursor:wait}
+.res{margin-top:16px;border:1px solid var(--ln);border-radius:10px;padding:16px;background:#fbfcfb}
+.badge{display:inline-block;padding:3px 12px;border-radius:99px;color:#fff;font:700 12px inherit;text-transform:uppercase;letter-spacing:.04em}
+.safe{background:var(--g)}.suspicious{background:var(--am)}.dangerous{background:var(--rd)}.unverified{background:var(--gy)}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:16px 0 6px}
+.chip{display:inline-block;margin:0 6px 6px 0;padding:2px 10px;border:1px solid var(--ln);border-radius:99px;font-size:13px;background:#fff}
+.it{border-top:1px solid var(--ln);padding:8px 0;font-size:14px;overflow-wrap:anywhere}.it:first-of-type{border-top:0}
+.q{color:var(--mu);font-style:italic}.note{color:var(--mu);font-size:13px;margin-top:12px}
+footer{max-width:960px;margin:0 auto;padding:0 18px 40px;color:var(--mu);font-size:13px}
 </style>
 </head>
 <body>
+<header><div class="bar">
+<a class="brand" href="#top"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg>VerifyINEC</a>
+<nav><a href="#check">Check</a><a href="#feed">Threat feed</a><a href="#report">Report a site</a><a href="#official">Official list</a></nav>
+</div></header>
+<div class="hero" id="top"><div class="wrap">
+<h1>Check a link or message before you trust it</h1>
+<p>Paste a link or a message about voter registration, PVC collection or results. See whether it looks fake before you click, pay or share. We test authenticity only, never political content.</p>
+</div></div>
 <main>
-  <h1>VerifyINEC</h1>
-  <p class="sub">Paste a suspicious message, link or claim about the election. AI checks it against official sources.</p>
-  <textarea id="msg" maxlength="2000" placeholder="Paste a WhatsApp or SMS message here…"></textarea>
-  <button id="go">Check this message</button>
-  <div id="out"></div>
+<section id="check">
+<div class="tabs" role="tablist"><button class="tab" id="t1" role="tab" aria-selected="true">Check a link</button><button class="tab" id="t2" role="tab" aria-selected="false">Check a message</button></div>
+<div id="p1"><h2>Check a link</h2><p class="sub">Works on the address itself: lookalike names, disguised characters, shortened links.</p>
+<input id="link" type="text" placeholder="Link or domain, e.g. inecnigeria.org" autocomplete="off"><button class="go" id="b1">Check link</button></div>
+<div id="p2" hidden><h2>Check a message</h2><p class="sub">Paste an SMS, WhatsApp or email text. Links inside are checked too, and AI reads the claims.</p>
+<textarea id="msg" maxlength="2000" placeholder="Paste the message here"></textarea><button class="go" id="b2">Check message</button>
+<p class="note">Messages are sent to an AI service for analysis. Never paste your BVN, PIN or passwords.</p></div>
+<div id="out"></div>
+</section>
+<section id="feed"><h2>Threat feed</h2><p class="sub">Suspicious sites and messages you flagged on this device. Nothing is shared with anyone.</p><div id="feedlist"></div></section>
+<section id="report"><h2>Report a site</h2><p class="sub">Pick a flagged item and get a ready-to-send report for the domain registrar, the web host, Google Safe Browsing, Meta and INEC.</p>
+<select id="pick"></select><button class="go" id="mk">Write report</button> <button class="sec" id="cp">Copy</button>
+<textarea id="rep" style="margin-top:10px" readonly placeholder="Your report appears here"></textarea></section>
+<section id="official"><h2>Official list</h2><p class="sub">Domains treated as official, including all their subdomains. Confirm any change with INEC’s own channels.</p><div id="offlist"></div></section>
 </main>
+<footer>A clean result never proves a site is official: type known addresses yourself. Domain age, certificate monitoring and page screenshots are future work.</footer>
 <script>
-const $ = (id) => document.getElementById(id);
-const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
-
-function section(parent, title) { parent.appendChild(el('h2', '', title)); }
-
-function render(d) {
-  const out = $('out'); out.replaceChildren();
-  const card = el('div', 'card'); out.appendChild(card);
-  card.appendChild(el('span', 'badge ' + d.verdict, d.verdict));
-  card.appendChild(el('p', '', d.explanation));
-  if (d.explanation_local && d.explanation_local !== d.explanation) card.appendChild(el('p', 'quote', d.explanation_local));
-  if (d.advice) { section(card, 'What to do'); card.appendChild(el('p', '', d.advice)); }
-
-  if (d.tactics && d.tactics.length) {
-    section(card, 'Tactics detected');
-    d.tactics.forEach((t) => card.appendChild(el('span', 'chip', t)));
-  }
-  if (d.claims && d.claims.length) {
-    section(card, 'Claims checked');
-    d.claims.forEach((c) => {
-      const row = el('div', 'item');
-      row.appendChild(el('strong', '', c.status + ': '));
-      row.appendChild(document.createTextNode(c.claim || ''));
-      if (c.quote) row.appendChild(el('div', 'quote', '“' + c.quote + '”'));
-      if (c.source_url) row.appendChild(el('div', 'quote', c.source_url));
-      if (c.note) row.appendChild(el('div', 'quote', c.note));
-      card.appendChild(row);
-    });
-  }
-  if (d.sources && d.sources.length) {
-    section(card, 'Sources consulted');
-    d.sources.forEach((src) => {
-      const row = el('div', 'item');
-      row.appendChild(el('span', 'chip', src.tier));
-      row.appendChild(document.createTextNode((src.title || src.url) + ' — ' + src.url));
-      card.appendChild(row);
-    });
-  }
-  if (d.evidence && d.evidence.length) {
-    section(card, 'Link checks');
-    d.evidence.forEach((e) => {
-      const flags = [];
-      flags.push(e.in_registry ? 'official INEC domain' : 'not an official INEC domain');
-      if (e.lookalike_of) flags.push('imitates ' + e.lookalike_of);
-      if (e.punycode) flags.push('disguised characters');
-      if (e.shortener) flags.push('shortened link');
-      card.appendChild(el('div', 'item', e.host + ' — ' + flags.join(', ')));
-    });
-  }
-  if (d.mode === 'search-only') card.appendChild(el('p', 'note', 'Running without an AI model: link checks, keyword rules and live search only.'));
-  else if (!d.ai_used) card.appendChild(el('p', 'note', 'AI analysis was unavailable, so only technical checks were used.'));
+const $=i=>document.getElementById(i),el=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e};
+let last=null,KEY='verifyinec_feed';
+const feed=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch{return[]}};
+const save=a=>{try{localStorage.setItem(KEY,JSON.stringify(a))}catch{}};
+function tab(n){[1,2].forEach(i=>{$('p'+i).hidden=i!==n;$('t'+i).setAttribute('aria-selected',i===n)});$('out').replaceChildren()}
+$('t1').onclick=()=>tab(1);$('t2').onclick=()=>tab(2);
+function h3(p,t){p.appendChild(el('h3','',t))}
+function render(d,input){
+  last={input,d};const box=el('div','res');
+  box.appendChild(el('span','badge '+d.verdict,d.verdict));
+  box.appendChild(el('p','',d.explanation));
+  if(d.explanation_local&&d.explanation_local!==d.explanation)box.appendChild(el('p','q',d.explanation_local));
+  if(d.advice){h3(box,'What to do');box.appendChild(el('p','',d.advice))}
+  if(d.tactics&&d.tactics.length){h3(box,'Tactics detected');d.tactics.forEach(t=>box.appendChild(el('span','chip',t)))}
+  if(d.claims&&d.claims.length){h3(box,'Claims checked');d.claims.forEach(c=>{const r=el('div','it');r.appendChild(el('strong','',c.status+': '));r.appendChild(document.createTextNode(c.claim||''));
+    if(c.quote)r.appendChild(el('div','q','“'+c.quote+'”'));if(c.source_url)r.appendChild(el('div','q',c.source_url));if(c.note)r.appendChild(el('div','q',c.note));box.appendChild(r)})}
+  if(d.sources&&d.sources.length){h3(box,'Sources consulted');d.sources.forEach(s=>{const r=el('div','it');r.appendChild(el('span','chip',s.tier));r.appendChild(document.createTextNode((s.title||s.url)+' — '+s.url));box.appendChild(r)})}
+  if(d.evidence&&d.evidence.length){h3(box,'Link checks');d.evidence.forEach(e=>{const f=[e.in_registry?'official INEC domain':'not an official INEC domain'];
+    if(e.lookalike_of)f.push('imitates '+e.lookalike_of);if(e.punycode)f.push('disguised characters');if(e.shortener)f.push('shortened link');box.appendChild(el('div','it',e.host+' — '+f.join(', ')))})}
+  if(d.mode==='search-only')box.appendChild(el('p','note','Running without an AI model: link checks, keyword rules and live search only.'));
+  else if(d.mode!=='link'&&!d.ai_used)box.appendChild(el('p','note','AI analysis was unavailable, so only technical checks were used.'));
+  if(d.verdict==='dangerous'||d.verdict==='suspicious'){const b=el('button','sec','Flag on this device');b.onclick=()=>{const a=feed();a.unshift({input:input.slice(0,300),verdict:d.verdict,hosts:(d.evidence||[]).map(e=>e.host),tactics:d.tactics||[],date:new Date().toISOString().slice(0,10)});save(a.slice(0,50));b.disabled=true;b.textContent='Flagged';draw()};box.appendChild(b)}
+  $('out').replaceChildren(box);
 }
+async function run(text,linkOnly,btn,label){
+  if(!text.trim())return;btn.disabled=true;btn.textContent='Checking…';
+  try{const r=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text,linkOnly})});
+    if(!r.ok)throw new Error('Server error '+r.status);render(await r.json(),text)}
+  catch(e){$('out').replaceChildren(el('div','res','Something went wrong: '+e.message))}
+  finally{btn.disabled=false;btn.textContent=label}
+}
+$('b1').onclick=()=>run($('link').value,true,$('b1'),'Check link');
+$('b2').onclick=()=>run($('msg').value,false,$('b2'),'Check message');
+function draw(){
+  const a=feed(),L=$('feedlist');L.replaceChildren();$('pick').replaceChildren();
+  if(!a.length){L.appendChild(el('p','note','Nothing flagged yet. Check a link or message, then use Flag on this device.'));$('pick').appendChild(new Option('No flagged items yet',''))}
+  a.forEach((x,i)=>{const r=el('div','it');r.appendChild(el('span','badge '+x.verdict,x.verdict));r.appendChild(document.createTextNode(' '+x.date+' — '+x.input));
+    const d=el('button','sec','Remove');d.style.cssText='margin:0 0 0 8px;padding:2px 10px;font-size:12px';d.onclick=()=>{a.splice(i,1);save(a);draw()};r.appendChild(d);L.appendChild(r);
+    $('pick').appendChild(new Option((x.hosts[0]||x.input.slice(0,50))+' ('+x.date+')',i))});
+}
+$('mk').onclick=()=>{const x=feed()[+$('pick').value];if(!x)return;const h=x.hosts.length?x.hosts.join(', '):'(see message below)';
+  $('rep').value=`Subject: Report of suspected phishing impersonating INEC (Nigeria)
 
-$('go').addEventListener('click', async () => {
-  const text = $('msg').value.trim();
-  if (!text) return;
-  const btn = $('go'); btn.disabled = true; btn.textContent = 'Checking…';
-  try {
-    const r = await fetch('/api/analyze', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text }) });
-    if (!r.ok) throw new Error('Server error ' + r.status);
-    render(await r.json());
-  } catch (e) {
-    $('out').replaceChildren(el('div', 'card', 'Something went wrong: ' + e.message));
-  } finally {
-    btn.disabled = false; btn.textContent = 'Check this message';
-  }
-});
+I am reporting suspected fraud that imitates the Independent National Electoral Commission (INEC).
+
+Address(es): ${h}
+Date noticed: ${x.date}
+Signals: ${x.tactics.length?x.tactics.join(', '):'imitates the official domain inecnigeria.org'}
+
+Content seen:
+"""${x.input}"""
+
+The address is not an official INEC domain. Please investigate and suspend or block it. This report can be sent to the domain registrar, the web host, Google Safe Browsing, Meta (if shared there) and INEC.`};
+$('cp').onclick=async()=>{try{await navigator.clipboard.writeText($('rep').value);$('cp').textContent='Copied';setTimeout(()=>$('cp').textContent='Copy',1500)}catch{$('rep').select()}};
+fetch('/api/registry').then(r=>r.json()).then(j=>(j.official_domains||[]).forEach(d=>$('offlist').appendChild(el('span','chip',d)))).catch(()=>{});
+draw();
 </script>
 </body>
 </html>
