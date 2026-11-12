@@ -39,6 +39,7 @@ module.exports = async (req, res) => {
   let verification = null;
   let sources = [];
   let aiUsed = true;
+  let aiError = null;
   let webUsed = false;
 
   try {
@@ -93,6 +94,7 @@ module.exports = async (req, res) => {
     });
   } catch (err) {
     aiUsed = false;
+    aiError = String(err.message).slice(0, 80);
     console.error('AI pipeline failed:', err.message);
   }
 
@@ -118,5 +120,6 @@ module.exports = async (req, res) => {
     sources: sources.filter((s) => s.url).map(({ url, title, tier }) => ({ url, title, tier })),
     web_search_used: webUsed,
     ai_used: aiUsed,
+    ai_error: aiError,
   });
 };
