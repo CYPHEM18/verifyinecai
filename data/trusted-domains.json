@@ -1,11 +1,49 @@
 {
-  "_note": "Editorial choice: review and edit this list. 'official' domains come from registry.json. 'media' results can show a claim is circulating or reported, but never confirm it alone.",
+  "_note": "Editorial choice: review and edit. 'official' domains come from registry.json. Anything here is 'media' tier: it can show a claim is reported or circulating, but never confirms it alone.",
   "media": [
+    "gov.ng",
+
     "premiumtimesng.com",
     "channelstv.com",
     "thecable.ng",
     "punchng.com",
+    "vanguardngr.com",
+    "guardian.ng",
+    "thenationonlineng.net",
+    "tribuneonlineng.com",
+    "thisdaylive.com",
+    "dailytrust.com",
+    "leadership.ng",
+    "sunnewsonline.com",
+    "independent.ng",
+    "blueprint.ng",
+    "nannews.ng",
+    "arise.tv",
+    "tvcnews.tv",
+    "nta.ng",
+    "businessday.ng",
+    "citynewsng.com",
+    "abntv.com.ng",
+    "theeagleonline.com.ng",
+    "icirnigeria.org",
+    "humangle.ng",
+
+    "dubawa.org",
+    "africacheck.org",
+    "factcheckhub.com",
+    "factcheck.afp.com",
+
+    "yiaga.org",
+    "cddwestafrica.org",
+
     "reuters.com",
-    "bbc.com"
+    "bbc.com",
+    "bbc.co.uk",
+    "apnews.com",
+    "aljazeera.com",
+    "france24.com",
+    "dw.com",
+    "theguardian.com",
+    "cnn.com"
   ]
 }
