@@ -1,11 +1,24 @@
 const { extractUrls, checkUrl } = require('../lib/evidence');
-const { search } = require('../lib/retrieval');
+const { search, tok } = require('../lib/retrieval');
 const { searchWeb } = require('../lib/websearch');
 const { callLLM } = require('../lib/llm');
 const { promptA, promptB } = require('../lib/prompts');
 const { searchOnly } = require('../lib/rules');
 
 const VERDICTS = ['safe', 'suspicious', 'dangerous', 'unverified'];
+
+// Keep only web results that are recent and actually about the claim (heuristic overlap).
+const MAX_AGE = 540 * 864e5; // about 18 months
+const fresh = (s) => !s.date || Date.now() - Date.parse(s.date) < MAX_AGE;
+function relevantTo(claim, s) {
+  const q = new Set(tok(claim));
+  if (!q.size) return false;
+  const words = new Set(tok((s.title || '') + ' ' + s.text));
+  let n = 0;
+  q.forEach((w) => words.has(w) && n++);
+  return n >= Math.max(3, Math.ceil(q.size * 0.4));
+}
+
 const norm = (s) => String(s).toLowerCase().replace(/\s+/g, ' ').trim();
 
 module.exports = async (req, res) => {
@@ -57,7 +70,7 @@ module.exports = async (req, res) => {
         const r = await searchWeb(c);
         if (r) {
           webUsed = true;
-          webSources.push(...r.filter((x) => x.tier !== 'unvetted' && x.text));
+          webSources.push(...r.filter((x) => x.tier !== 'unvetted' && x.text && fresh(x) && relevantTo(c, x)));
         }
       }
     } catch (err) {
