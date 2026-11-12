@@ -17,6 +17,19 @@ module.exports = async (req, res) => {
   const evidence = extractUrls(text).slice(0, 5).map(checkUrl);
   const hardDanger = evidence.some((e) => e.lookalike_of || e.punycode);
 
+  // Link-only check: rules only, no AI or search needed
+  if (req.body?.linkOnly) {
+    const allOfficial = evidence.length > 0 && evidence.every((e) => e.in_registry);
+    const verdict = hardDanger ? 'dangerous' : evidence.some((e) => e.shortener) ? 'suspicious' : allOfficial ? 'safe' : 'unverified';
+    const explanation = {
+      dangerous: 'This address imitates an official INEC address. Do not open it or enter any details.',
+      suspicious: 'This is a shortened link, so the real destination is hidden. Do not open it until you know where it leads.',
+      safe: 'This address is on the official list. Still, type known addresses yourself rather than following links.',
+      unverified: evidence.length ? 'This address is not on the official list, but it does not imitate one either. Do not treat it as INEC.' : 'No link or domain was found in what you entered.',
+    }[verdict];
+    return res.status(200).json({ verdict, category: 'link', tactics: [], claims: [], explanation, explanation_local: '', advice: 'Only trust links on official INEC domains.', evidence, sources: [], ai_used: false, mode: 'link' });
+  }
+
   // No model configured: run search-only mode (link checks + keyword rules + live search)
   if (!process.env.LLM_BASE_URL || !process.env.LLM_MODEL) {
     return res.status(200).json(await searchOnly(text, evidence, hardDanger));
